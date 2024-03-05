@@ -13,6 +13,7 @@ class AppFixtures extends Fixture
     {
         $faker = \Faker\Factory::create('fr_FR'); // Initialisation de Faker
 
+        // Création de 40 speakers
         $speakerArray = [];
         for ($i = 1; $i < 41; $i++) {
             $speaker = new Speaker();
@@ -26,6 +27,7 @@ class AppFixtures extends Fixture
             array_push($speakerArray, $speaker);
             $manager->persist($speaker);
         }
+
         // Tableau de 20 evenements
         $events = [
             'Frontend Masters',
@@ -49,23 +51,20 @@ class AppFixtures extends Fixture
             'Web security, how to protect ?',
             'Web performance, how to optimize ?',
         ];
+        
         // Boucle pour créer 20 événements
-        foreach ($events as $item) {
+        for ($i = 0; $i < count($events); $i++) {
             $event = new Event();
-            $event->setName($item)
+            $event->setName($events[$i])
                 ->setTheme('Web development')
                 ->setDate($faker->dateTimeBetween('-6 months', '+6 months'))
                 ->setLocation($faker->city)
                 ->setAttendee($faker->numberBetween(10, 100))
                 ->setPrice($faker->numberBetween(0, 250))
-                ->addSpeaker($speakerArray[$faker->numberBetween(0, 39)])
+                ->addSpeaker($speakerArray[$i])
             ;
             $manager->persist($event);
         }
-
         $manager->flush();
     }
-
-
-
 }
