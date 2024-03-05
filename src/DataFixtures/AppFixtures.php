@@ -12,6 +12,20 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $faker = \Faker\Factory::create('fr_FR'); // Initialisation de Faker
+
+        $speakerArray = [];
+        for ($i = 1; $i < 41; $i++) {
+            $speaker = new Speaker();
+            $speaker->setFirstname($faker->firstName)
+                ->setLastname($faker->lastName)
+                ->setJob($faker->jobTitle)
+                ->setCompany($faker->company)
+                ->setExperience($faker->numberBetween(1, 20))
+                ->setImage('https://randomuser.me/api/portraits/men/' . $i . '.jpg')
+            ;
+            array_push($speakerArray, $speaker);
+            $manager->persist($speaker);
+        }
         // Tableau de 20 evenements
         $events = [
             'Frontend Masters',
@@ -44,10 +58,14 @@ class AppFixtures extends Fixture
                 ->setLocation($faker->city)
                 ->setAttendee($faker->numberBetween(10, 100))
                 ->setPrice($faker->numberBetween(0, 250))
-                ;
+                ->addSpeaker($speakerArray[$faker->numberBetween(0, 39)])
+            ;
             $manager->persist($event);
         }
 
         $manager->flush();
     }
+
+
+
 }
